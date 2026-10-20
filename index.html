@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Invoice Generator — No Signup, Data Stays in Your Browser</title>
+<meta name="description" content="Create a clean, professional invoice in your browser. Completely free, no signup, no watermark. Your data never leaves your device.">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="print.css" media="print">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="site-header-inner">
+    <div class="brand">Invoice<span class="brand-accent">Gen</span></div>
+    <nav class="site-nav">
+      <a href="#app">Create Invoice</a>
+      <a href="#how">How It Works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+  <!-- AD / AFFILIATE SLOT: header banner. Placeholder only — no ad code loaded. -->
+  <div class="ad-slot ad-slot-header" aria-hidden="true">
+    <span class="ad-slot-label">Advertisement slot — reserved (no ads loaded)</span>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="hero no-print">
+    <h1>Free Invoice Generator</h1>
+    <p class="hero-sub">Fill in the form, watch your invoice update live, then print it or save it as a PDF.</p>
+    <ul class="hero-points">
+      <li><strong>100% free</strong> — no tiers, no watermark, no trial.</li>
+      <li><strong>No signup</strong> — no account, no email required.</li>
+      <li><strong>Private by design</strong> — everything runs in your browser. Your invoices are stored only on this device (browser local storage) and are never sent anywhere.</li>
+    </ul>
+    <a class="btn btn-primary" href="#app">Start your invoice</a>
+  </section>
+
+  <div class="content-grid">
+    <section id="app" class="app-panel no-print" aria-label="Invoice editor">
+      <h2>Invoice details</h2>
+
+      <fieldset>
+        <legend>From (you)</legend>
+        <label>Your name / business
+          <input type="text" id="from-name" placeholder="e.g. Alex Rivera Design" autocomplete="off">
+        </label>
+        <label>Your details (address, email, phone — one per line)
+          <textarea id="from-details" rows="3" placeholder="123 Main St&#10;Springfield, IL&#10;alex@example.com"></textarea>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Bill to (client)</legend>
+        <label>Client name
+          <input type="text" id="to-name" placeholder="e.g. Bright Store LLC" autocomplete="off">
+        </label>
+        <label>Client details (address, email, phone — one per line)
+          <textarea id="to-details" rows="3" placeholder="456 Oak Ave&#10;Chicago, IL&#10;billing@brightstore.example"></textarea>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Invoice info</legend>
+        <div class="field-row">
+          <label>Invoice #
+            <input type="text" id="invoice-number" autocomplete="off">
+          </label>
+          <label>Currency
+            <select id="currency">
+              <option value="USD" selected>USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="CAD">CAD ($)</option>
+              <option value="AUD">AUD ($)</option>
+              <option value="JPY">JPY (¥)</option>
+              <option value="INR">INR (₹)</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label>Issue date
+            <input type="date" id="issue-date">
+          </label>
+          <label>Payment terms
+            <select id="terms">
+              <option value="0">Due on receipt</option>
+              <option value="7">Net 7</option>
+              <option value="14">Net 14</option>
+              <option value="30" selected>Net 30</option>
+              <option value="60">Net 60</option>
+            </select>
+          </label>
+          <label>Due date
+            <input type="date" id="due-date">
+          </label>
+        </div>
+        <div class="field-row">
+          <label>Status
+            <select id="status">
+              <option value="DRAFT">Draft</option>
+              <option value="UNPAID" selected>Unpaid</option>
+              <option value="PAID">Paid</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Items</legend>
+        <div id="items-editor"></div>
+        <button type="button" class="btn btn-secondary" id="add-item">+ Add item</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Totals</legend>
+        <div class="field-row">
+          <label>Tax rate (%)
+            <input type="number" id="tax-rate" min="0" step="0.01" value="0">
+          </label>
+          <label>Discount (%)
+            <input type="number" id="discount-rate" min="0" max="100" step="0.01" value="0">
+          </label>
+          <label>Shipping / fees
+            <input type="number" id="shipping" min="0" step="0.01" value="0">
+          </label>
+          <label>Amount already paid
+            <input type="number" id="amount-paid" min="0" step="0.01" value="0">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Notes &amp; payment info</legend>
+        <label>Notes (shown on the invoice)
+          <textarea id="notes" rows="3" placeholder="Thank you for your business. Payment via bank transfer or PayPal."></textarea>
+        </label>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="btn-print">Print / Save as PDF</button>
+        <button type="button" class="btn btn-secondary" id="btn-save">Save invoice</button>
+        <button type="button" class="btn btn-ghost" id="btn-new">New invoice</button>
+      </div>
+
+      <div class="saved-panel">
+        <h3>Saved on this device</h3>
+        <p class="saved-note">Saved invoices live only in this browser's local storage. Clearing your browser data deletes them — keep a printed or PDF copy of anything you need to retain.</p>
+        <ul id="saved-list" class="saved-list"></ul>
+      </div>
+    </section>
+
+    <!-- AD / AFFILIATE SLOT: sidebar. Placeholder only — no ad code loaded. -->
+    <aside class="ad-slot ad-slot-sidebar no-print" aria-hidden="true">
+      <span class="ad-slot-label">Advertisement / affiliate slot — reserved (no ads loaded)</span>
+    </aside>
+  </div>
+
+  <section class="preview-wrap" aria-label="Invoice preview">
+    <div class="invoice-sheet" id="invoice-sheet">
+      <div class="inv-head">
+        <div>
+          <div class="inv-title">INVOICE</div>
+          <div class="inv-number" id="pv-number">#INV-0001</div>
+        </div>
+        <div class="inv-status" id="pv-status">UNPAID</div>
+      </div>
+
+      <div class="inv-parties">
+        <div class="inv-party">
+          <div class="inv-party-label">From</div>
+          <div class="inv-party-name" id="pv-from-name">Your Name</div>
+          <div class="inv-party-details" id="pv-from-details"></div>
+        </div>
+        <div class="inv-party">
+          <div class="inv-party-label">Bill To</div>
+          <div class="inv-party-name" id="pv-to-name">Client Name</div>
+          <div class="inv-party-details" id="pv-to-details"></div>
+        </div>
+        <div class="inv-dates">
+          <div><span>Issue date:</span> <strong id="pv-issue">—</strong></div>
+          <div><span>Due date:</span> <strong id="pv-due">—</strong></div>
+          <div><span>Terms:</span> <strong id="pv-terms">Net 30</strong></div>
+        </div>
+      </div>
+
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th class="col-desc">Description</th>
+            <th class="col-num">Qty</th>
+            <th class="col-num">Rate</th>
+            <th class="col-num">Amount</th>
+          </tr>
+        </thead>
+        <tbody id="pv-items"></tbody>
+      </table>
+
+      <div class="inv-summary">
+        <table class="inv-totals">
+          <tr><td>Subtotal</td><td class="col-num" id="pv-subtotal">$0.00</td></tr>
+          <tr id="pv-discount-row"><td>Discount</td><td class="col-num" id="pv-discount">−$0.00</td></tr>
+          <tr id="pv-tax-row"><td>Tax</td><td class="col-num" id="pv-tax">$0.00</td></tr>
+          <tr id="pv-shipping-row"><td>Shipping / fees</td><td class="col-num" id="pv-shipping">$0.00</td></tr>
+          <tr class="inv-total-row"><td>Total</td><td class="col-num" id="pv-total">$0.00</td></tr>
+          <tr id="pv-paid-row"><td>Amount paid</td><td class="col-num" id="pv-paid">−$0.00</td></tr>
+          <tr class="inv-due-row"><td>Amount due</td><td class="col-num" id="pv-due-amount">$0.00</td></tr>
+        </table>
+      </div>
+
+      <div class="inv-notes" id="pv-notes-wrap">
+        <div class="inv-party-label">Notes</div>
+        <p id="pv-notes"></p>
+      </div>
+
+      <div class="inv-foot">Created with this free invoice generator. No account was used and no data left this device.</div>
+    </div>
+  </section>
+
+  <section id="how" class="info-section no-print">
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>Fill in the form.</strong> Your details, your client's details, and what you're charging for.</li>
+      <li><strong>Check the preview.</strong> Totals, tax, and the amount due update as you type.</li>
+      <li><strong>Print or save as PDF.</strong> Choose "Save as PDF" in your browser's print dialog to download a clean copy — no watermark, ever.</li>
+      <li><strong>Save it for later.</strong> The Save button keeps a copy in this browser so you can reopen or duplicate it.</li>
+    </ol>
+  </section>
+
+  <section id="faq" class="info-section no-print">
+    <h2>FAQ</h2>
+    <h3>Is it really free?</h3>
+    <p>Yes. Every feature on this page is free to use, with no signup and no watermark on your invoices.</p>
+    <h3>Where does my data go?</h3>
+    <p>Nowhere. This tool runs entirely in your browser. Invoices you save are stored in your browser's local storage on this device only — they are not uploaded, shared, or backed up. If you clear your browser data, saved invoices are deleted, so keep a PDF or printed copy of anything important.</p>
+    <h3>Can I add my logo?</h3>
+    <p>Not yet in this version — your business name appears at the top of every invoice.</p>
+    <h3>Does it send invoices or process payments?</h3>
+    <p>No. It creates the invoice document. You send the PDF to your client and get paid however you normally do (bank transfer, PayPal, check, etc.).</p>
+  </section>
+</main>
+
+<footer class="site-footer no-print">
+  <p>Free Invoice Generator — a client-side tool. No accounts, no tracking scripts, no data leaves your browser.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

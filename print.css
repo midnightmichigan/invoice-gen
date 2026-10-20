@@ -1,0 +1,33 @@
+/* Free Invoice Generator — print stylesheet.
+   When the user prints (or saves as PDF), only the invoice sheet is shown. */
+
+@page {
+  size: letter;
+  margin: 14mm;
+}
+
+.no-print {
+  display: none !important;
+}
+
+body {
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.invoice-sheet {
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.inv-status {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.preview-wrap { margin: 0; }
